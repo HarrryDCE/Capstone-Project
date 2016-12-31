@@ -1,64 +1,78 @@
-#install.packages("shiny")
+options(shiny.maxRequestSize=30*1024^2)
+
 library(shiny)
-library(HistData)
-data(GaltonFamilies)
-library(dplyr)
-library(ggplot2)
+library(data.table)
+library(NLP)
+library(tm)
 
-# converting in centimeters
-gf <- GaltonFamilies
-gf <- gf %>% mutate(father=father*2.54,
-                    mother=mother*2.54,
-                    childHeight=childHeight*2.54)
-
-# linear model
-regmod <- lm(childHeight ~ father + mother + gender, data=gf)
-
-shinyServer(function(input, output) {
-  output$parentsText <- renderText({
-    paste("When the father's height is",
-          strong(round(input$inFh, 1)),
-          "cm, and mother's is",
-          strong(round(input$inMh, 1)),
-          "cm, then:")
-  })
-  output$prediction <- renderText({
-    df <- data.frame(father=input$inFh,
-                     mother=input$inMh,
-                     gender=factor(input$inGen, levels=levels(gf$gender)))
-    ch <- predict(regmod, newdata=df)
-    sord <- ifelse(
-      input$inGen=="female",
-      "Daugther",
-      "Son"
-    )
-    paste0(em(strong(sord)),
-           "'s predicted height would be approximately ",
-           em(strong(round(ch))),
-           " cm"
-    )
-  })
-  output$barsPlot <- renderPlot({
-    sord <- ifelse(
-      input$inGen=="female",
-      "Daugther",
-      "Son"
-    )
-    df <- data.frame(father=input$inFh,
-                     mother=input$inMh,
-                     gender=factor(input$inGen, levels=levels(gf$gender)))
-    ch <- predict(regmod, newdata=df)
-    yvals <- c("Father", sord, "Mother")
-    df <- data.frame(
-      x = factor(yvals, levels = yvals, ordered = TRUE),
-      y = c(input$inFh, ch, input$inMh),
-      colors = c("red", "Yellow", "pink")
-    )
-    ggplot(df, aes(x=x, y=y, color=colors, fill=colors)) +
-      geom_bar(stat="identity", width=0.5) +
-      xlab("") +
-      ylab("Height (cm)") +
-      theme_minimal() +
-      theme(legend.position="none")
-  })
+# Define server logic required to summarize and view the selected dataset
+shinyServer(function(input, output) {    
+    # Generate a summary of the dataset
+    output$Original <- renderText({
+        Original_Input <- input$obs
+        return(Original_Input)
+    })
+    
+    # Generate a summary of the dataset
+    output$Translated <- renderText({
+        Original_Input <- input$obs
+        Translated_Input <- Translate_Input(Original_Input)
+        return(Translated_Input)
+    })
+    
+    # Generate a summary of the dataset
+    output$BestGuess <- renderText({
+        Original_Input <- input$obs
+        Translated_Input <- Translate_Input(Original_Input)
+        BestGuess_Output <- "The predicted next word will be here."
+        Split_Trans_Input <- Split_Translate_Input(Original_Input)
+        Word_Count <- length(Split_Trans_Input)
+        
+        if(Word_Count==1){
+            BestGuess_Output <- Word_Count1(Split_Trans_Input)
+        }
+        if(Word_Count==2){
+            BestGuess_Output <- Word_Count2(Split_Trans_Input)
+        }
+        if(Word_Count==3){
+            BestGuess_Output <- Word_Count3(Split_Trans_Input)
+        }
+        if(Word_Count > 3){
+            Words_to_Search <- c(Split_Trans_Input[Word_Count - 2],
+                                 Split_Trans_Input[Word_Count - 1],
+                                 Split_Trans_Input[Word_Count])
+            BestGuess_Output <- Word_Count3(Words_to_Search)
+        }
+        return(BestGuess_Output)
+    })
+    
+    # Show the first "n" observations
+    output$view <- renderTable({
+        Original_Input <- input$obs
+        Split_Trans_Input <- Split_Translate_Input(Original_Input)
+        Word_Count <- length(Split_Trans_Input)
+        
+        if(Word_Count==1){
+            BestGuess_Output <- Word_Count1(Split_Trans_Input)
+        }
+        if(Word_Count==2){
+            BestGuess_Output <- Word_Count2(Split_Trans_Input)
+        }
+        if(Word_Count==3){
+            BestGuess_Output <- Word_Count3(Split_Trans_Input)
+        }
+        if(Word_Count > 3){
+            Words_to_Search <- c(Split_Trans_Input[Word_Count - 2],
+                                 Split_Trans_Input[Word_Count - 1],
+                                 Split_Trans_Input[Word_Count])
+            BestGuess_Output <- Word_Count3(Words_to_Search)
+        }
+      
+        if(exists("AlternativeGuess", where = -1)){
+            AlternativeGuess
+        }else{
+            XNgramsTable <- data.frame(Word=NA, Likelihood=NA)
+        }
+      
+    })
 })
