@@ -1,34 +1,34 @@
-#install.packages("shiny")
+
 library(shiny)
 
+# Define UI for dataset viewer application
 shinyUI(fluidPage(
-  titlePanel("Prediction of height of the child through his parents"),
-  sidebarLayout(
-    sidebarPanel(
-      helpText("This application predicts height of child through his gender and the height of the parents."),
-      helpText("Please make a choise of parameters:"),
-      sliderInput(inputId = "inFh",
-                  label = "Father's height in centimeters:",
-                  value = 150,
-                  min = 150,
-                  max = 200,
-                  step = 1),
-      sliderInput(inputId = "inMh",
-                  label = "Mother's height in centimeters:",
-                  value = 150,
-                  min = 150,
-                  max = 200,
-                  step = 1),
-      radioButtons(inputId = "inGen",
-                   label = "Child's gender: ",
-                   choices = c("Female"="female", "Male"="male"),
-                   inline = TRUE)
-    ),
-    
-    mainPanel(
-      htmlOutput("parentsText"),
-      htmlOutput("prediction"),
-      plotOutput("barsPlot", width = "50%")
+  
+    # Application title.
+    titlePanel("The Next Word Prediction Model"),
+  
+    sidebarLayout(
+        sidebarPanel(
+            textInput("obs", "Enter Your Statement Here:"),
+            
+            helpText("Note: This application will use this statement to predict the most likely next word."),
+            
+            submitButton("Predict Next Word")
+        ),
+      
+      mainPanel(
+          h6("You input the following text:"),
+          textOutput("Original"),
+          br(),
+          h6("Your statement has been reformated to the following:"),
+          textOutput("Translated"),
+          br(),
+          br(),
+          h3("Most Likely Next Word:"),
+          div(textOutput("BestGuess"), style = "color:red"),
+          br(),
+          h3("The program guessed your word based on the following data:"),
+          tableOutput("view")
     )
   )
 ))
