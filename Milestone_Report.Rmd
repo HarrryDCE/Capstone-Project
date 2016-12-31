@@ -1,0 +1,41 @@
+---
+title: "Data Science Capstone Project- Next Word Predictor Model"
+author: "Harish Kumar"
+date: "December 30, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Summary & Description of Data
+The Capstone project for the Coursera Data Science Specialization involves using the Coursera-Swiftkey Dataset. The goal of this project is to design a shiny application with text prediction capabilities. This report will outline the exploratory analysis of the dataset and the current plans for implementing the text prediction algorithm.
+
+The Coursera-Swiftkey Dataset is comprised of the output of crawls of news sites, blogs and twitter.  The dataset contains 3 files across four languages (Russian, Finnish, German and English). This project will focus on the English language datasets. 
+
+- en_US.blogs.txt
+- en_US.twitter.txt
+- en_US.news.txt
+
+## Prediction Algorithm
+The Next Word Prediction model work on eplporatory analysis with following steps:
+
+- The first part of this exploratory analysis is to determine the basic characteristics for each dataset.
+- Since the Datasets are large enough, representative sampling of each datasets are made for analysis.
+- Before the subsetted data can be fully analyzed the data needs to be pre-processed to standardize the words and characters from each dataset.
+- N-gram analysis for distribution of 2-grams gives an idea of the prevalence of prepositions in natural language.
+- Development of the text prediction application will use the frequency of 4-grams, 3-grams and 2-grams to estimate the most likely word to follow the entered text.
+
+##Application Output 
+![Next Predictor Model](D:\Trainings\trainings\Next Word.png)
+
+## Application Info
+To display the understanding of using shiny to build an application, a simple application called Next Word Prediction Model has been developed and deployed at: https://harishkumar.shinyapps.io/nextwordpredictormodel/
+
+The application allows the user to:
+
+Enter any word/phrase in the text box. Click "Predict Next Word" button and application will produce most likely word.
+
+Data Source for the application can be found at: https://github.com/HarrryDCE/Capstone-Project
+
