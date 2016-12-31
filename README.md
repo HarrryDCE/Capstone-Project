@@ -1,9 +1,9 @@
-# Course-Project--Shiny-Application-and-Reproducible-Pitch
+# Capstone Course-Project--Shiny Application & Reproducible Pitch
 
-# Prediction of Child height through his parents
+# Prediction of Next Word Prediction Model
 
-This data product used dataset GaltonFamilies, in the HistData R package, to predicts height of child through his gender and the height of the parents.
-- This is the final presentation for the Course Project of the “Developing data products” course
+This data product used Coursera-Swiftkey Dataset, in the HistData R package, to predicts the next word predicted on the word enterd by the user.
+- This is the final Application for the Capstone Project of the “Data Science Specialization” course
 - This course is part of the “Data Science specialization”
 - The project consists in two activities:
 - Create a Shiny application
